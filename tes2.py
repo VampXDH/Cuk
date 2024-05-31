@@ -12,17 +12,15 @@ def scrape_proxy(url, token=None):
         proxies = response.text.strip().split('\n')
         return proxies
     except Exception as e:
-        raise Exception(f"Error saat melakukan scraping {url}: {str(e)}")
+        print(f"Error saat melakukan scraping {url}: {str(e)}")
+        return []
 
 def scrape_proxies(urls, token=None):
-    try:
-        all_proxies = []
-        for url in urls:
-            proxies = scrape_proxy(url, token=token)
-            all_proxies.extend(proxies)
-        return all_proxies
-    except Exception as e:
-        raise Exception(f"Error saat melakukan scraping proxy: {str(e)}")
+    all_proxies = []
+    for url in urls:
+        proxies = scrape_proxy(url, token=token)
+        all_proxies.extend(proxies)
+    return all_proxies
 
 def check_proxy_file_exists():
     return os.path.exists('proxy.txt')
@@ -48,7 +46,7 @@ def scrape_and_save_proxies():
         # Tulis proxy ke proxy.txt
         with open('proxy.txt', 'w') as f:
             # Hapus 'http://', 'socks5://', dan 'socks4://' dari setiap proxy
-            cleaned_proxies = [proxy.replace('http://', '').replace('socks5://', '').replace('socks4://', '').replace ('|http', '') for proxy in proxies]
+            cleaned_proxies = [proxy.replace('http://', '').replace('socks5://', '').replace('socks4://', '').replace('|http', '') for proxy in proxies]
             f.write('\n'.join(cleaned_proxies))
         print('Proxy disimpan di proxy.txt')
     except Exception as e:
